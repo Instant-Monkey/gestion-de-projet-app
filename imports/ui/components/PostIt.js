@@ -1,5 +1,5 @@
 import React, { Component} from "react";
-import Paper from 'material-ui/Paper'
+import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 import {yellow100} from 'material-ui/styles/colors';
 
 const style = {
@@ -14,9 +14,16 @@ const style = {
 export default class PostIt extends Component {
   render() { 
     return(
-      <div className="post-it-container">
-        <Paper style={style} zDepth={2}/>
-      </div>
+      <Card className="post-it-container" className="col s12 m7 l3">
+        <CardHeader
+          title={this.props.title}
+          actAsExpander={true}
+          showExpandableButton={true}
+        />
+        <cartText>
+          {this.props.text}
+        </cartText>
+      </Card>
     )
   }
 

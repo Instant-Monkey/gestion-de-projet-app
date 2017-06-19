@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import injectTapEventPlugin from 'react-tap-event-plugin';
+
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import PostIt from './components/PostIt.js';
@@ -27,11 +27,14 @@ export default class App extends Component {
       <MuiThemeProvider>
         <div className="app-container">
           <Header />
-          {this.renderPostIts()}
+          <div className="row">
+              {this.renderPostIts()}
+          </div>
+
         </div>
     </MuiThemeProvider>
 
-    )
+  )
   }
 
 }
