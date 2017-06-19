@@ -13,12 +13,12 @@ export default class PostIt extends Component {
         <Card style={postItStyle}>
           <CardHeader
             title={this.props.title}
-            actAsExpander={true}
-            showExpandableButton={true}
+            actAsExpander={false}
+            showExpandableButton={false}
           />
-          <cartText>
+          <cardText>
             {this.props.text}
-          </cartText>
+          </cardText>
         </Card>
       </div>
 
