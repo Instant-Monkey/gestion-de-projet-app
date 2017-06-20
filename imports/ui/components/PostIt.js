@@ -2,6 +2,7 @@ import React, { Component} from 'react';
 import PropTypes from 'prop-types';
 import { createContainer } from 'meteor/react-meteor-data';
 
+import Task from './Task.js';
 //Api
 import { Tasks } from '../../api/tasks.js';
 
@@ -33,15 +34,23 @@ class PostIt extends Component {
     const text = this.taskInput.getValue().trim();
     Tasks.insert({
       text,
-      postIt_id: this.props._id,
+      postIt_id: this.props.postIt._id,
       createdAt: new Date()
     });
     this.taskInput.input.value = '';
   }
 
+  deleteThisTask() {
+    Tasks.remove(this.props.task._id);
+  }
+
   renderTasks(){
     return this.props.tasks.map((task) => (
-      <li key={task._id}>{task.text}</li>
+      <Task
+        task={task}
+        key={task._id}
+        deleteTask={this.deleteThisTask}
+      />
     ));
 
   }
@@ -51,7 +60,7 @@ class PostIt extends Component {
       <div className=" post-it-container col s12 m4 l3 ">
         <Card style={postItStyle}>
           <CardHeader
-            title={this.props.title}
+            title={this.props.postIt.title}
             actAsExpander={false}
             showExpandableButton={false}
           />
@@ -86,11 +95,11 @@ class PostIt extends Component {
 
 PostIt.propTypes = {
   tasks: PropTypes.array.isRequired,
-  title: PropTypes.string
+  postIt: PropTypes.object,
 };
 
 export default createContainer((props) => {
-  const currentPostIt = props._id;
+  const currentPostIt = props.postIt._id;
 
   return {
     tasks: Tasks.find({ postIt_id: currentPostIt}).fetch(),
