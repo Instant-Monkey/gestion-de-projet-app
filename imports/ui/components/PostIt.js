@@ -22,17 +22,21 @@ const buttonStyle = {
   margin: '5% 10%'
 };
 
+const textFieldStyle = {
+  display: 'block',
+  margin: 'auto'
+};
+
 class PostIt extends Component {
   handleSubmit(event) {
     event.preventDefault();
-    const text = this.taskInput.value.trim();
+    const text = this.taskInput.getValue().trim();
     Tasks.insert({
       text,
       postIt_id: this.props._id,
       createdAt: new Date()
     });
-
-    this.taskInput.value = '';
+    this.taskInput.input.value = '';
   }
 
   renderTasks(){
@@ -58,11 +62,13 @@ class PostIt extends Component {
           </cardText>
 
           <form className="new-task" onSubmit={this.handleSubmit.bind(this)} >
-            <input
-                type="text"
-                ref={node => this.taskInput = node}
-                placeholder="Type to add new tasks"
-              />
+            <TextField
+              hintText="Faire les courses, faire caca..."
+              floatingLabelText="Entrez une nouvelle tâche "
+              type="text"
+              ref={node => this.taskInput = node}
+              style={textFieldStyle}
+            />
             <RaisedButton
               label="Add Task"
               primary={true}
@@ -80,9 +86,7 @@ class PostIt extends Component {
 
 PostIt.propTypes = {
   tasks: PropTypes.array.isRequired,
-  title: PropTypes.string,
-  _id: PropTypes.string
-
+  title: PropTypes.string
 };
 
 export default createContainer((props) => {
