@@ -1,6 +1,7 @@
 import React, { Component} from 'react';
 import PropTypes from 'prop-types';
 import { createContainer } from 'meteor/react-meteor-data';
+import {List} from 'material-ui/List';
 
 import Task from './Task.js';
 //Api
@@ -50,7 +51,7 @@ class PostIt extends Component {
         task={task}
         key={task._id}
         deleteTask={this.deleteThisTask}
-        
+
       />
     ));
 
@@ -65,27 +66,20 @@ class PostIt extends Component {
             actAsExpander={false}
             showExpandableButton={false}
           />
-          <cardText>
-            <ul>
-              {this.renderTasks()}
-            </ul>
-          </cardText>
-
           <form className="new-task" onSubmit={this.handleSubmit.bind(this)} >
             <TextField
-              hintText="Faire les courses, faire caca..."
+              hintText="Appuyez sur entrée pour valider"
               floatingLabelText="Entrez une nouvelle tâche "
               type="text"
               ref={node => this.taskInput = node}
               style={textFieldStyle}
             />
-            <RaisedButton
-              label="Add Task"
-              primary={true}
-              style={buttonStyle}
-              type="submit"
-             />
          </form>
+          <cardText>
+            <List>
+              {this.renderTasks()}
+            </List>
+          </cardText>
         </Card>
       </div>
 
@@ -103,6 +97,6 @@ export default createContainer((props) => {
   const currentPostIt = props.postIt._id;
 
   return {
-    tasks: Tasks.find({ postIt_id: currentPostIt}).fetch(),
+    tasks: Tasks.find({ postIt_id: currentPostIt}, {sort: {createdAt: -1}}).fetch(),
   };
 }, PostIt);
