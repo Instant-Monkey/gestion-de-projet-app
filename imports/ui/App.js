@@ -12,11 +12,11 @@ export default class App extends Component {
       <MuiThemeProvider>
         <div className="app-container">
           <Header />
-          <PostItsList /> 
+          <PostItsList />
         </div>
     </MuiThemeProvider>
 
-  )
+    );
   }
 
 }

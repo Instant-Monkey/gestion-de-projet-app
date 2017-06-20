@@ -1,5 +1,4 @@
-import React, { Component} from "react";
-import ReactDOM from 'react-dom';
+import React, { Component} from 'react';
 import PropTypes from 'prop-types';
 import { createContainer } from 'meteor/react-meteor-data';
 
@@ -17,12 +16,6 @@ const postItStyle = {
   height: '100%'
 };
 
-const inputStyle = {
-  width: '80%',
-  margin: 'auto',
-  display: 'block'
-
-};
 
 const buttonStyle = {
   display: 'block',
@@ -30,16 +23,16 @@ const buttonStyle = {
 };
 
 class PostIt extends Component {
-  handleSubmit(event) { 
+  handleSubmit(event) {
     event.preventDefault();
-    const text = ReactDOM.findDOMNode(this.refs.taskInput).value.trim();
+    const text = this.taskInput.value.trim();
     Tasks.insert({
       text,
       postIt_id: this.props._id,
       createdAt: new Date()
     });
 
-    ReactDOM.findDOMNode(this.refs.taskInput).value = '';
+    this.taskInput.value = '';
   }
 
   renderTasks(){
@@ -49,7 +42,7 @@ class PostIt extends Component {
 
   }
 
-  render() { 
+  render() {
     return(
       <div className=" post-it-container col s12 m4 l3 ">
         <Card style={postItStyle}>
@@ -63,12 +56,13 @@ class PostIt extends Component {
               {this.renderTasks()}
             </ul>
           </cardText>
-          <input
-              type="text"
-              ref="taskInput"
-              placeholder="Type to add new tasks"
-            />
+
           <form className="new-task" onSubmit={this.handleSubmit.bind(this)} >
+            <input
+                type="text"
+                ref={node => this.taskInput = node}
+                placeholder="Type to add new tasks"
+              />
             <RaisedButton
               label="Add Task"
               primary={true}
@@ -79,19 +73,22 @@ class PostIt extends Component {
         </Card>
       </div>
 
-    )
+    );
   }
 
 }
 
 PostIt.propTypes = {
   tasks: PropTypes.array.isRequired,
-}
+  title: PropTypes.string,
+  _id: PropTypes.string
+
+};
 
 export default createContainer((props) => {
   const currentPostIt = props._id;
 
   return {
-    tasks: Tasks.find({ postIt_id: currentPostIt}).fetch(), 
+    tasks: Tasks.find({ postIt_id: currentPostIt}).fetch(),
   };
-}, PostIt)
+}, PostIt);
