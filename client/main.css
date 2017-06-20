@@ -3,6 +3,12 @@ p { 
   font-family: 'Roboto', sans-serif;
 }
 
+.delete-task {
+  display:none;
+}
+.task:hover .delete-task{
+  display:inline;
+}
 /*******************
   Utility Classes
 *******************/

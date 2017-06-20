@@ -50,6 +50,7 @@ class PostIt extends Component {
         task={task}
         key={task._id}
         deleteTask={this.deleteThisTask}
+        
       />
     ));
 
