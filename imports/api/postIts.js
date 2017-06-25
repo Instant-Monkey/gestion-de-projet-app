@@ -5,7 +5,7 @@ export const PostIts = new Mongo.Collection('postIts');
 
 if (Meteor.isServer) {
 
-  Meteor.publish('postIts', function tasksPublication() {
+  Meteor.publish('postIts', function postItsPublication() {
     return PostIts.find();
   });
 }

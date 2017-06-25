@@ -4,9 +4,13 @@ import PropTypes from 'prop-types';
 import { createContainer } from 'meteor/react-meteor-data';
 import {List} from 'material-ui/List';
 
+//Components
 import Task from './Task.js';
+
 //Api
+import { HashTags } from '../../api/hashTags.js';
 import { Tasks } from '../../api/tasks.js';
+
 
 //Material
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
@@ -44,6 +48,14 @@ class PostIt extends Component {
     Meteor.call('tasks.archive', this.props.task._id);
   }
 
+  handleHashTagSubmit(event) {
+    event.preventDefault();
+    const hashTag = this.hashTagInput.getValue().trim();
+    Meteor.call('hashTags.insert', hashTag, this.props.postIt._id);
+
+    this.hashTagInput.input.value = '';
+  }
+
   renderTasks(){
     return this.props.tasks.map((task) => (
       <Task
@@ -79,6 +91,15 @@ class PostIt extends Component {
               {this.renderTasks()}
             </List>
           </cardText>
+          <form className="new-hashTag" onSubmit={this.handleHashTagSubmit.bind(this)} >
+            <TextField
+              hintText="nouveau hashtag"
+              floatingLabelText="Entrez une nouvelle tâche "
+              type="text"
+              ref={node => this.hashTagInput = node}
+              style={textFieldStyle}
+            />
+         </form>
         </Card>
       </div>
 
@@ -91,13 +112,16 @@ PostIt.propTypes = {
   tasks: PropTypes.array.isRequired,
   task: PropTypes.object,
   postIt: PropTypes.object,
+  hashTags: PropTypes.array
 };
 
 export default createContainer((props) => {
   const currentPostIt = props.postIt._id;
   Meteor.subscribe('tasks');
+  Meteor.subscribe('hashTags');
 
   return {
     tasks: Tasks.find({ postIt_id: currentPostIt, archived: false}, {sort: {createdAt: -1}}).fetch(),
+    hashTags: HashTags.find({ postIt_id: currentPostIt}, {sort: {createdAt: 1}}).fetch()
   };
 }, PostIt);

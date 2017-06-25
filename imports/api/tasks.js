@@ -26,5 +26,8 @@ Meteor.methods({
     Tasks.update(task_id, {
       $set: {archived: true}
     });
-  }
+  },/*
+  'hashTags.insert'(){
+    console.log("i'm here");
+  }*/
 });
