@@ -15,7 +15,7 @@ export default class Task extends Component {
           <ContentArchive
             className="delete-task"
             hoverColor="#000"
-            onClick={this.props.deleteTask.bind(this)}
+            onClick={this.props.archiveTask.bind(this)}
           />
         }
 
@@ -26,6 +26,6 @@ export default class Task extends Component {
 
 Task.propTypes = {
   task: PropTypes.object,
-  deleteTask: PropTypes.func,
+  archiveTask: PropTypes.func,
   _id: PropTypes.string
 };

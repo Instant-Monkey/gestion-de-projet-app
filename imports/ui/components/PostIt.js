@@ -1,3 +1,4 @@
+import {Meteor} from 'meteor/meteor';
 import React, { Component} from 'react';
 import PropTypes from 'prop-types';
 import { createContainer } from 'meteor/react-meteor-data';
@@ -33,20 +34,14 @@ class PostIt extends Component {
   handleSubmit(event) {
     event.preventDefault();
     const text = this.taskInput.getValue().trim();
-    Tasks.insert({
-      text,
-      postIt_id: this.props.postIt._id,
-      archived: false,
-      createdAt: new Date()
-    });
+
+    Meteor.call('tasks.insert', text, this.props.postIt._id);
+
     this.taskInput.input.value = '';
   }
 
-  deleteThisTask() {
-    Tasks.update(this.props.task._id, {
-      $set: {archived: true}
-    });
-
+  archiveThisTask() {
+    Meteor.call('tasks.archive', this.props.task._id);
   }
 
   renderTasks(){
@@ -54,7 +49,7 @@ class PostIt extends Component {
       <Task
         task={task}
         key={task._id}
-        deleteTask={this.deleteThisTask}
+        archiveTask={this.archiveThisTask}
 
       />
     ));
