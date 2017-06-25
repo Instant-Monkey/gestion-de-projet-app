@@ -95,6 +95,7 @@ PostIt.propTypes = {
 
 export default createContainer((props) => {
   const currentPostIt = props.postIt._id;
+  Meteor.subscribe('tasks');
 
   return {
     tasks: Tasks.find({ postIt_id: currentPostIt, archived: false}, {sort: {createdAt: -1}}).fetch(),

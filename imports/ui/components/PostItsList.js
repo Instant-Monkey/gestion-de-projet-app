@@ -1,3 +1,4 @@
+import { Meteor } from 'meteor/meteor';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types'; // ES6
 import { createContainer } from 'meteor/react-meteor-data';
@@ -41,6 +42,9 @@ PostItsList.propTypes = {
 };
 
 export default createContainer(() => {
+
+  Meteor.subscribe('postIts');
+
   return {
     postIts: PostIts.find({}).fetch(),
   };
