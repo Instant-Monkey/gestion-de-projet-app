@@ -36,13 +36,17 @@ class PostIt extends Component {
     Tasks.insert({
       text,
       postIt_id: this.props.postIt._id,
+      archived: false,
       createdAt: new Date()
     });
     this.taskInput.input.value = '';
   }
 
   deleteThisTask() {
-    Tasks.remove(this.props.task._id);
+    Tasks.update(this.props.task._id, {
+      $set: {archived: true}
+    });
+
   }
 
   renderTasks(){
@@ -90,6 +94,7 @@ class PostIt extends Component {
 
 PostIt.propTypes = {
   tasks: PropTypes.array.isRequired,
+  task: PropTypes.object,
   postIt: PropTypes.object,
 };
 
@@ -97,6 +102,6 @@ export default createContainer((props) => {
   const currentPostIt = props.postIt._id;
 
   return {
-    tasks: Tasks.find({ postIt_id: currentPostIt}, {sort: {createdAt: -1}}).fetch(),
+    tasks: Tasks.find({ postIt_id: currentPostIt, archived: false}, {sort: {createdAt: -1}}).fetch(),
   };
 }, PostIt);
