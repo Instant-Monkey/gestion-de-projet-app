@@ -18,10 +18,23 @@ Meteor.methods({
 
     const existingHashTag = HashTags.findOne( { hashTag: hashTag}) ;
 
-    if ( existingHashTag ) {
-      HashTags.update(existingHashTag._id, {
-        $push: {postIt_ids: postIt_id}
+    if ( existingHashTag) {
+      let isHashTagAlreadyInPostIt = false ;
+
+      //go through array of postIt to see if the hashtag already exist in current postIt
+      existingHashTag.postIt_ids.map((arrObj) => {
+        if (arrObj._str == postIt_id ) {
+          isHashTagAlreadyInPostIt = true;
+        }
       });
+
+      //if it doesn't exist add the postId to hashtag
+      if (!isHashTagAlreadyInPostIt) {
+        HashTags.update(existingHashTag._id, {
+          $push: {postIt_ids: postIt_id}
+        });
+      }
+
     } else {
       HashTags.insert({
         hashTag,
