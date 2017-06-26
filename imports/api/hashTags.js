@@ -17,11 +17,10 @@ Meteor.methods({
   'hashTags.insert'(hashTag, postIt_id) {
     check(hashTag, String);
 
-    //if postidId is an object, get the id as string
-    if (typeof postIt_id == 'object') postIt_id = postIt_id._str;
-
+    // Try to find if the hashtag exists in the db
     const existingHashTag = HashTags.findOne( { hashTag: hashTag}) ;
 
+    // if hashtag exists, check if it's new in the postit
     if ( existingHashTag) {
       let isHashTagAlreadyInPostIt = false ;
 
@@ -38,20 +37,21 @@ Meteor.methods({
           $push: {postIt_ids: postIt_id}
         });
 
+        // And the hashtag to the postIt Collection
         Meteor.call('update.PostItHashTags', postIt_id, existingHashTag._id);
       }
 
-    } //create hashtag in collection
+    }
+    //if hashtag doesn't exist create it
     else {
       HashTags.insert({
         hashTag,
         postIt_ids: [postIt_id],
         createdAt: new Date()
       }, (err, newHashTag_id) => {
+        // And the hashtag to the postIt Collection via callback function 
         Meteor.call('update.PostItHashTags', postIt_id, newHashTag_id);
       });
-
-
     }
   }
 
