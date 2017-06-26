@@ -9,6 +9,9 @@ import { PostIts } from '../../api/postIts.js';
 //Components
 import PostIt from './PostIt.js';
 
+//Material-ui
+import TextField from 'material-ui/TextField';
+
 class PostItsList extends Component {
   getPostIts(){
     return [
@@ -28,10 +31,29 @@ class PostItsList extends Component {
 
   }
 
+  handlePostItSubmit(event){
+    event.preventDefault();
+    const text = this.postItInput.getValue().trim();
+
+    Meteor.call('postIt.insert', text);
+
+    this.postItInput.input.value = '';
+  }
+
   render() {
     return(
-      <div className="row">
-          {this.renderPostIts()}
+      <div className="app-container">
+        <form className="new-task" onSubmit={this.handlePostItSubmit.bind(this)} >
+          <TextField
+            hintText="Appuyez sur entrée pour valider"
+            floatingLabelText="Entrez un nouveau postIt "
+            type="text"
+            ref={node => this.postItInput = node}
+          />
+       </form>
+        <div className="row">
+            {this.renderPostIts()}
+        </div>
       </div>
     );
   }
