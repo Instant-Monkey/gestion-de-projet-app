@@ -8,6 +8,7 @@ import { createContainer } from 'meteor/react-meteor-data';
 import HashTag from './postIt/HashTag.js';
 import PostItHeader from './postIt/PostItHeader.js';
 import PostItTasksList from './postIt/PostItTasksList.js';
+import PostItNotes from './postIt/PostItNotes.js';
 
 //Api
 import { HashTags } from '../../api/hashTags.js';
@@ -81,7 +82,7 @@ class PostIt extends Component {
     if (this.props.postIt.taskDisplayer) {
       return <PostItTasksList tasks={this.props.tasks} postIt={this.props.postIt}/>;
     } else {
-      return <p>Free Text</p> ;
+      return <PostItNotes postIt={this.props.postIt} /> ;
     }
   }
 
