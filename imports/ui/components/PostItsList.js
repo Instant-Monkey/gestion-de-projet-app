@@ -16,7 +16,7 @@ class PostItsList extends Component {
 
   renderPostIts(){
     return this.props.postIts.map((postIt) => (
-      <PostIt key={postIt._id} postIt={postIt} />
+      <PostIt key={postIt._id} postIt={postIt} deletePostIt={this.deleteThisPostIt} />
     ));
 
   }
@@ -29,6 +29,11 @@ class PostItsList extends Component {
 
     this.postItInput.input.value = '';
   }
+
+  deleteThisPostIt(){
+    Meteor.call('postIts.remove', this.props.postIt._id);
+  }
+
 
   render() {
     return(
@@ -51,6 +56,7 @@ class PostItsList extends Component {
 
 PostItsList.propTypes = {
   postIts: PropTypes.array.isRequired,
+  postIt: PropTypes.object
 };
 
 export default createContainer(() => {

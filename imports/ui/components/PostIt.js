@@ -7,6 +7,7 @@ import { createContainer } from 'meteor/react-meteor-data';
 //Components
 import Task from './postIt/Task.js';
 import HashTag from './postIt/HashTag.js';
+import PostItHeader from './postIt/PostItHeader.js';
 
 //Api
 import { HashTags } from '../../api/hashTags.js';
@@ -14,16 +15,19 @@ import { Tasks } from '../../api/tasks.js';
 
 
 //Material
-import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
+import {Card, CardText} from 'material-ui/Card';
 import {yellow100} from 'material-ui/styles/colors';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import {List} from 'material-ui/List';
+import Divider from 'material-ui/Divider';
+
 
 
 const postItStyle = {
   backgroundColor: yellow100,
-  height: '100%'
+  height: '100%',
+  marginBottom: '20px'
 };
 
 
@@ -40,7 +44,7 @@ const textFieldStyle = {
 const hashTagWrapperStyle = {
   display: 'flex',
   flexWrap: 'wrap'
-}
+};
 
 class PostIt extends Component {
   handleTaskSubmit(event) {
@@ -79,7 +83,6 @@ class PostIt extends Component {
         task={task}
         key={task._id}
         archiveTask={this.archiveThisTask}
-
       />
     ));
   }
@@ -96,13 +99,9 @@ class PostIt extends Component {
 
   render() {
     return(
-      <div className=" post-it-container col s12 m4 l3 xl2 ">
+      <div className=" post-it-container col s12 m4 l3 ">
         <Card style={postItStyle}>
-          <CardHeader
-            title={this.props.postIt.title}
-            actAsExpander={false}
-            showExpandableButton={false}
-          />
+          <PostItHeader postIt={this.props.postIt} deletePostIt={this.props.deletePostIt} />
           <form className="new-task" onSubmit={this.handleTaskSubmit.bind(this)} >
             <TextField
               hintText="Appuyez sur entrée pour valider"
@@ -112,15 +111,17 @@ class PostIt extends Component {
               style={textFieldStyle}
             />
          </form>
-          <cardText>
+
+          <CardText>
             <List>
               {this.renderTasks()}
             </List>
-          </cardText>
+          </CardText>
+          <Divider />
           <form className="new-hashTag" onSubmit={this.handleHashTagSubmit.bind(this)} >
             <TextField
-              hintText="nouveau hashtag"
-              floatingLabelText="Entrez une nouvelle tâche "
+              hintText="pas besoin de #"
+              floatingLabelText="nouveau #hashtag "
               type="text"
               ref={node => this.hashTagInput = node}
               style={textFieldStyle}
@@ -143,7 +144,8 @@ PostIt.propTypes = {
   task: PropTypes.object,
   postIt: PropTypes.object,
   hashTags: PropTypes.array,
-  hashTag: PropTypes.object
+  hashTag: PropTypes.object,
+  deletePostIt: PropTypes.func
 };
 
 export default createContainer((props) => {

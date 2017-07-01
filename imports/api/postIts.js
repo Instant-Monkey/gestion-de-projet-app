@@ -25,5 +25,8 @@ Meteor.methods({
     PostIts.update(postIt_id, {
       $push: {hashTags: hashTag_id}
     });
+  },
+  'postIts.remove'(postItId){ 
+    PostIts.remove(postItId);
   }
 });
