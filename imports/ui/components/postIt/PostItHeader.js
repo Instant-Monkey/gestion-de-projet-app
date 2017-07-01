@@ -9,7 +9,16 @@ import IconButton from 'material-ui/IconButton';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 
 export default class PostItHeader extends Component {
+  displayChangeModeText() {
+    if (this.props.postIt.taskDisplayer) {
+      return 'Passer en mode Notes';
+    } else {
+      return 'Passer en mode Liste';
+    }
+  }
+
   render() {
+
     return (
       <div className="postIt-header row ">
         <CardHeader
@@ -24,10 +33,7 @@ export default class PostItHeader extends Component {
            targetOrigin={{horizontal: 'right', vertical: 'top'}}
            className="col s2"
          >
-           <MenuItem primaryText="Refresh" />
-           <MenuItem primaryText="Send feedback" />
-           <MenuItem primaryText="Settings" />
-           <MenuItem primaryText="Help" />
+           <MenuItem primaryText={this.displayChangeModeText()} onClick={this.props.changePostItMode.bind(this)}/>
            <MenuItem primaryText="Supprimer le postIt" onClick={this.props.deletePostIt.bind(this)}/>
          </IconMenu>
       </div>
@@ -38,6 +44,7 @@ export default class PostItHeader extends Component {
 
 PostItHeader.propTypes = {
   postIt: PropTypes.object,
-  deletePostIt: PropTypes.func
+  deletePostIt: PropTypes.func,
+  changePostItMode: PropTypes.func
 
 };

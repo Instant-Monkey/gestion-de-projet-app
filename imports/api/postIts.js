@@ -18,6 +18,8 @@ Meteor.methods({
     PostIts.insert({
       title,
       hashTags: [],
+      taskDisplayer: false,
+      freeText: '',
       createdAt: new Date()
     });
   },
@@ -26,7 +28,12 @@ Meteor.methods({
       $push: {hashTags: hashTag_id}
     });
   },
-  'postIts.remove'(postItId){ 
+  'postIts.remove'(postItId){
     PostIts.remove(postItId);
+  },
+  'PostIts.changeMode'(postItId, value){
+    PostIts.update(postItId, {
+      $set: {taskDisplayer: !value}
+    });
   }
 });
