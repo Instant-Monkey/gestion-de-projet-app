@@ -49,10 +49,13 @@ Meteor.methods({
         postIt_ids: [postIt_id],
         createdAt: new Date()
       }, (err, newHashTag_id) => {
-        // And the hashtag to the postIt Collection via callback function 
+        // And the hashtag to the postIt Collection via callback function
         Meteor.call('update.PostItHashTags', postIt_id, newHashTag_id);
       });
     }
+  },
+  'hashTags.remove'(hashTagId){ 
+    HashTags.remove(hashTagId);
   }
 
 });

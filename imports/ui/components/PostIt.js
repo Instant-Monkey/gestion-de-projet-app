@@ -2,10 +2,11 @@ import {Meteor} from 'meteor/meteor';
 import React, { Component} from 'react';
 import PropTypes from 'prop-types';
 import { createContainer } from 'meteor/react-meteor-data';
-import {List} from 'material-ui/List';
+
 
 //Components
-import Task from './Task.js';
+import Task from './postIt/Task.js';
+import HashTag from './postIt/HashTag.js';
 
 //Api
 import { HashTags } from '../../api/hashTags.js';
@@ -17,6 +18,8 @@ import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 import {yellow100} from 'material-ui/styles/colors';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
+import {List} from 'material-ui/List';
+
 
 const postItStyle = {
   backgroundColor: yellow100,
@@ -34,8 +37,13 @@ const textFieldStyle = {
   margin: 'auto'
 };
 
+const hashTagWrapperStyle = {
+  display: 'flex',
+  flexWrap: 'wrap'
+}
+
 class PostIt extends Component {
-  handleSubmit(event) {
+  handleTaskSubmit(event) {
     event.preventDefault();
     const text = this.taskInput.getValue().trim();
 
@@ -48,9 +56,18 @@ class PostIt extends Component {
     Meteor.call('tasks.archive', this.props.task._id);
   }
 
+  deleteThisHashtag() {
+    Meteor.call('hashTags.remove', this.props.hashTag._id);
+  }
+
   handleHashTagSubmit(event) {
     event.preventDefault();
-    const hashTag = this.hashTagInput.getValue().trim();
+    let hashTag = this.hashTagInput.getValue().trim();
+
+    if (hashTag.charAt(0) != '#') {
+      hashTag = '#' + hashTag;
+    }
+
     Meteor.call('hashTags.insert', hashTag, this.props.postIt._id);
 
     this.hashTagInput.input.value = '';
@@ -65,19 +82,28 @@ class PostIt extends Component {
 
       />
     ));
+  }
 
+  renderChips(){
+    return this.props.hashTags.map((hashTag) => (
+      <HashTag
+        hashTag={hashTag}
+        key={hashTag._id}
+        deleteHashTag={this.deleteThisHashtag}
+      />
+    ));
   }
 
   render() {
     return(
-      <div className=" post-it-container col s12 m4 l3 ">
+      <div className=" post-it-container col s12 m4 l3 xl2 ">
         <Card style={postItStyle}>
           <CardHeader
             title={this.props.postIt.title}
             actAsExpander={false}
             showExpandableButton={false}
           />
-          <form className="new-task" onSubmit={this.handleSubmit.bind(this)} >
+          <form className="new-task" onSubmit={this.handleTaskSubmit.bind(this)} >
             <TextField
               hintText="Appuyez sur entrée pour valider"
               floatingLabelText="Entrez une nouvelle tâche "
@@ -100,6 +126,10 @@ class PostIt extends Component {
               style={textFieldStyle}
             />
          </form>
+         <div className="hashTags-wrapper" style={hashTagWrapperStyle}>
+           {this.renderChips()}
+         </div>
+
         </Card>
       </div>
 
@@ -112,7 +142,8 @@ PostIt.propTypes = {
   tasks: PropTypes.array.isRequired,
   task: PropTypes.object,
   postIt: PropTypes.object,
-  hashTags: PropTypes.array
+  hashTags: PropTypes.array,
+  hashTag: PropTypes.object
 };
 
 export default createContainer((props) => {
@@ -122,6 +153,6 @@ export default createContainer((props) => {
 
   return {
     tasks: Tasks.find({ postIt_id: currentPostIt, archived: false}, {sort: {createdAt: -1}}).fetch(),
-    hashTags: HashTags.find({ postIt_id: currentPostIt}, {sort: {createdAt: 1}}).fetch()
+    hashTags: HashTags.find({ postIt_ids: currentPostIt}, {sort: {createdAt: 1}}).fetch()
   };
 }, PostIt);
