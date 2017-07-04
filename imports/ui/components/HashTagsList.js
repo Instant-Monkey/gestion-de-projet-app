@@ -10,6 +10,7 @@ import {HashTags} from '../../api/hashTags.js';
 import {List, ListItem, makeSelectable} from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
 import ActionLabel from 'material-ui/svg-icons/action/label';
+import ActionSettingsBackupRestore from 'material-ui/svg-icons/action/settings-backup-restore.js';
 
 let SelectableList = makeSelectable(List);
 
@@ -27,9 +28,16 @@ function wrapState(ComposedComponent) {
     }
 
     handleRequestChange = (event, index) => {
-      this.setState({
-        selectedIndex: index,
-      });
+      if (index != '0') {
+        this.setState({
+          selectedIndex: index,
+        });
+      } else {
+        this.setState({
+          selectedIndex: 0
+        });
+      }
+
     };
 
     render() {
@@ -55,9 +63,10 @@ class HashTagsList extends Component {
         key={hashTag._id}
         value={hashTag.hashTag}
         primaryText={hashTag.hashTag}
+        onClick={this.props.getActiveHashTags}
         leftAvatar={
           <ActionLabel
-            className="delete-task"
+            className="label-hash-tag"
             hoverColor="#000"
             style="margin-top:5px"
           />
@@ -70,8 +79,18 @@ class HashTagsList extends Component {
   render() {
     return(
         <div className=" col s12 m4 l2">
-          <SelectableList defaultValue={3}>
+          <SelectableList defaultValue={0}>
             <Subheader> My HashTags </Subheader>
+              <ListItem
+                value="0"
+                primaryText="reset Hash Tags"
+                leftAvatar={
+                  <ActionSettingsBackupRestore
+                    className="reset-hash-tags"
+                  />
+                }
+              >
+              </ListItem>
               {this.renderHashTags()}
           </SelectableList>
         </div>
@@ -81,14 +100,16 @@ class HashTagsList extends Component {
 
 HashTagsList.propTypes = {
   hashTags: PropTypes.array.isRequired,
-  hashTag: PropTypes.object
+  hashTag: PropTypes.object,
+  getActiveHashTags: PropTypes.func
 };
 
-export default createContainer(() => {
+export default createContainer((params) => {
 
   Meteor.subscribe('hashTags');
 
   return {
     hashTags: HashTags.find({}).fetch(),
+    getActiveHashTags: params.getActiveHashTags
   };
 }, HashTagsList);

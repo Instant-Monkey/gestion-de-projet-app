@@ -59,8 +59,7 @@ PostItsList.propTypes = {
   postIt: PropTypes.object
 };
 
-export default createContainer(() => {
-
+export default createContainer((params) => {
   Meteor.subscribe('postIts');
 
   return {
