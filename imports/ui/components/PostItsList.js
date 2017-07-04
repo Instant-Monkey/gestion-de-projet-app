@@ -7,7 +7,7 @@ import { createContainer } from 'meteor/react-meteor-data';
 import { PostIts } from '../../api/postIts.js';
 
 //Components
-import PostIt from './PostIt.js';
+import PostIt from './postIt/PostIt.js';
 
 //Material-ui
 import TextField from 'material-ui/TextField';
@@ -37,7 +37,7 @@ class PostItsList extends Component {
 
   render() {
     return(
-      <div className="app-container">
+      <div className="post-it-list-container col s12 m8 l10">
         <form className="new-task" onSubmit={this.handlePostItSubmit.bind(this)} >
           <TextField
             hintText="Appuyez sur entrée pour valider"

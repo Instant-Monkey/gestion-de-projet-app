@@ -5,14 +5,14 @@ import { createContainer } from 'meteor/react-meteor-data';
 
 
 //Components
-import HashTag from './postIt/HashTag.js';
-import PostItHeader from './postIt/PostItHeader.js';
-import PostItTasksList from './postIt/PostItTasksList.js';
-import PostItNotes from './postIt/PostItNotes.js';
+import HashTag from './HashTag.js';
+import PostItHeader from './PostItHeader.js';
+import PostItTasksList from './PostItTasksList.js';
+import PostItNotes from './PostItNotes.js';
 
 //Api
-import { HashTags } from '../../api/hashTags.js';
-import { Tasks } from '../../api/tasks.js';
+import { HashTags } from '../../../api/hashTags.js';
+import { Tasks } from '../../../api/tasks.js';
 
 
 //Material
@@ -88,7 +88,7 @@ class PostIt extends Component {
 
   render() {
     return(
-      <div className=" post-it-container col s12 m4 l3 ">
+      <div className=" post-it-container col s12 m6 l4 xl3 ">
         <Card style={postItStyle}>
           <PostItHeader postIt={this.props.postIt} deletePostIt={this.props.deletePostIt} changePostItMode={this.changePostItMode} />
 
