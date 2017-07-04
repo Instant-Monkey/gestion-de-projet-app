@@ -57,13 +57,19 @@ SelectableList = wrapState(SelectableList);
 
 class HashTagsList extends Component {
 
+  handleHashTagClick() {
+    this.getActiveHashTags(this.id);
+  }
+
   renderHashTags(){
     return this.props.hashTags.map((hashTag) => (
       <ListItem
         key={hashTag._id}
+        id={hashTag._id}
         value={hashTag.hashTag}
         primaryText={hashTag.hashTag}
-        onClick={this.props.getActiveHashTags}
+        onClick={this.handleHashTagClick}
+        getActiveHashTags={this.props.getActiveHashTags}
         leftAvatar={
           <ActionLabel
             className="label-hash-tag"

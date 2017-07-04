@@ -61,6 +61,7 @@ PostItsList.propTypes = {
 
 export default createContainer((params) => {
   Meteor.subscribe('postIts');
+  console.log(params);
 
   return {
     postIts: PostIts.find({}).fetch(),
