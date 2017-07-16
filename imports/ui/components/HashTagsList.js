@@ -1,10 +1,6 @@
-import { Meteor } from 'meteor/meteor';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types'; // ES6
-import { createContainer } from 'meteor/react-meteor-data';
 
-//api
-import {HashTags} from '../../api/hashTags.js';
 
 //Material-ui
 import {List, ListItem, makeSelectable} from 'material-ui/List';
@@ -55,17 +51,17 @@ function wrapState(ComposedComponent) {
 
 SelectableList = wrapState(SelectableList);
 
-class HashTagsList extends Component {
+export default class HashTagsList extends Component {
 
   handleHashTagClick() {
-    this.getActiveHashTags(this.id);
+    this.getActiveHashTags(this._id);
   }
 
   renderHashTags(){
     return this.props.hashTags.map((hashTag) => (
       <ListItem
         key={hashTag._id}
-        id={hashTag._id}
+        _id={hashTag._id}
         value={hashTag.hashTag}
         primaryText={hashTag.hashTag}
         onClick={this.handleHashTagClick}
@@ -80,7 +76,7 @@ class HashTagsList extends Component {
       />
     ));
 
-  }7
+  }
 
   render() {
     return(
@@ -106,16 +102,5 @@ class HashTagsList extends Component {
 
 HashTagsList.propTypes = {
   hashTags: PropTypes.array.isRequired,
-  hashTag: PropTypes.object,
   getActiveHashTags: PropTypes.func
 };
-
-export default createContainer((params) => {
-
-  Meteor.subscribe('hashTags');
-
-  return {
-    hashTags: HashTags.find({}).fetch(),
-    getActiveHashTags: params.getActiveHashTags
-  };
-}, HashTagsList);

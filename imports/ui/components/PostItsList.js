@@ -1,10 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types'; // ES6
-import { createContainer } from 'meteor/react-meteor-data';
-
-//Api
-import { PostIts } from '../../api/postIts.js';
 
 //Components
 import PostIt from './postIt/PostIt.js';
@@ -12,14 +8,41 @@ import PostIt from './postIt/PostIt.js';
 //Material-ui
 import TextField from 'material-ui/TextField';
 
-class PostItsList extends Component {
+export default class PostItsList extends Component {
 
-  renderPostIts(){
-    return this.props.postIts.map((postIt) => (
-      <PostIt key={postIt._id} postIt={postIt} deletePostIt={this.deleteThisPostIt} />
-    ));
+  renderPostIts(postIts){
+    return postIts.map((postIt) => (
+    <PostIt key={postIt._id} postIt={postIt} deletePostIt={this.deleteThisPostIt} />
+      ));
+  }
+
+  filterPostIts(){
+    if (this.props.activeHashTags.length > 0) {
+      let filteredPostIts = [];
+      this.props.postIts.map((postIt) => (
+          this.props.activeHashTags.map((hashTag) => {
+            if (postIt.hashTags.indexOf(hashTag) != -1 ) {
+              if(filteredPostIts.indexOf(postIt) == -1 ) {
+                filteredPostIts.push(postIt);
+              }
+
+            }
+
+          })
+
+        ));
+
+      return filteredPostIts;
+
+    } else {
+      return this.props.postIts;
+    }
+
 
   }
+
+
+
 
   handlePostItSubmit(event){
     event.preventDefault();
@@ -47,7 +70,7 @@ class PostItsList extends Component {
           />
        </form>
         <div className="row">
-            {this.renderPostIts()}
+            {this.renderPostIts(this.filterPostIts())}
         </div>
       </div>
     );
@@ -56,14 +79,6 @@ class PostItsList extends Component {
 
 PostItsList.propTypes = {
   postIts: PropTypes.array.isRequired,
-  postIt: PropTypes.object
+  postIt: PropTypes.object,
+  activeHashTags: PropTypes.array
 };
-
-export default createContainer((params) => {
-  Meteor.subscribe('postIts');
-  console.log(params);
-
-  return {
-    postIts: PostIts.find({}).fetch(),
-  };
-}, PostItsList);
