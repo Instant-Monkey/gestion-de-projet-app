@@ -35,11 +35,18 @@ class Dashboard extends Component {
 
   }
 
+  resetHashTags() {
+    this.setState({
+      activeHashTags: []
+    });
+  }
+
   render() {
     return (
       <div className="row dashboard-container">
-        <HashTagList getActiveHashTags={this.updateActiveHashTags.bind(this)}  hashTags={this.props.hashTags}/>
+        <HashTagList updateActiveHashTags={this.updateActiveHashTags.bind(this)}  resetHashTags= {this.resetHashTags.bind(this)} hashTags={this.props.hashTags} activeHashTags={this.state.activeHashTags}/>
         <PostItsList activeHashTags={this.state.activeHashTags} postIts={this.props.postIts}/>
+
       </div>
     );
   }

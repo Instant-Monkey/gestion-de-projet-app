@@ -3,58 +3,23 @@ import PropTypes from 'prop-types'; // ES6
 
 
 //Material-ui
-import {List, ListItem, makeSelectable} from 'material-ui/List';
+import {List, ListItem} from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
 import ActionLabel from 'material-ui/svg-icons/action/label';
 import ActionSettingsBackupRestore from 'material-ui/svg-icons/action/settings-backup-restore.js';
 
-let SelectableList = makeSelectable(List);
-
-function wrapState(ComposedComponent) {
-  return class SelectableList extends Component {
-    static propTypes = {
-      children: PropTypes.node.isRequired,
-      defaultValue: PropTypes.number.isRequired,
-    };
-
-    componentWillMount() {
-      this.setState({
-        selectedIndex: this.props.defaultValue,
-      });
-    }
-
-    handleRequestChange = (event, index) => {
-      if (index != '0') {
-        this.setState({
-          selectedIndex: index,
-        });
-      } else {
-        this.setState({
-          selectedIndex: 0
-        });
-      }
-
-    };
-
-    render() {
-      return (
-        <ComposedComponent
-          value={this.state.selectedIndex}
-          onChange={this.handleRequestChange}
-        >
-          {this.props.children}
-        </ComposedComponent>
-      );
-    }
-  };
-}
-
-SelectableList = wrapState(SelectableList);
+const styleClicked = {
+  backgroundColor: 'rgba(0,0,0,0.1)'
+};
 
 export default class HashTagsList extends Component {
 
   handleHashTagClick() {
-    this.getActiveHashTags(this._id);
+    this.updateActiveHashTags(this._id);
+  }
+
+  isHashTagActive = (id) => {
+    return this.props.activeHashTags.indexOf(id) != -1 ?  true : false ;
   }
 
   renderHashTags(){
@@ -65,7 +30,9 @@ export default class HashTagsList extends Component {
         value={hashTag.hashTag}
         primaryText={hashTag.hashTag}
         onClick={this.handleHashTagClick}
-        getActiveHashTags={this.props.getActiveHashTags}
+        updateActiveHashTags={this.props.updateActiveHashTags}
+        activeHashTags={this.props.activeHashTags}
+        style={ this.isHashTagActive(hashTag._id) ? styleClicked : {}}
         leftAvatar={
           <ActionLabel
             className="label-hash-tag"
@@ -81,11 +48,12 @@ export default class HashTagsList extends Component {
   render() {
     return(
         <div className=" col s12 m4 l2">
-          <SelectableList defaultValue={0}>
+          <List defaultValue={4}>
             <Subheader> My HashTags </Subheader>
               <ListItem
                 value="0"
                 primaryText="reset Hash Tags"
+                onClick={this.props.resetHashTags}
                 leftAvatar={
                   <ActionSettingsBackupRestore
                     className="reset-hash-tags"
@@ -94,7 +62,7 @@ export default class HashTagsList extends Component {
               >
               </ListItem>
               {this.renderHashTags()}
-          </SelectableList>
+          </List>
         </div>
     );
   }
@@ -102,5 +70,7 @@ export default class HashTagsList extends Component {
 
 HashTagsList.propTypes = {
   hashTags: PropTypes.array.isRequired,
-  getActiveHashTags: PropTypes.func
+  updateActiveHashTags: PropTypes.func,
+  resetHashTags: PropTypes.func,
+  activeHashTags: PropTypes.array
 };
